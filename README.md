@@ -1,12 +1,12 @@
-# gmNano-DQ.py
-# v02 2025-03
-# Steve Hyde
+gmNano-DQ.py
+v02 2025-03
+Steve Hyde
 
-# gmNano-DQ takes as input a consensus Nanopore plasmid sequencing fastq file which contaons ONE consensus DNA sequence with its associated Phred quality score string
-# gmNano-DQ can't process as fastq file with more than one embedded DNA sequence, it tells you so and then quits 
-# When gmNano-DQ outputs to the terminal it creates four columns: base#, base, Phred quality ASCII code, numerical Phred quality score
-# When gmNano-DQ outputs to a tab deliminated TXT file it creates two columns: base#, numerical Phred quality score
-# additional options output headers that can be used when directly importing the output file into GraphPad Prism for visualisation.
+gmNano-DQ takes as input a consensus Nanopore plasmid sequencing fastq file which contaons ONE consensus DNA sequence with its associated Phred quality score string
+gmNano-DQ can't process as fastq file with more than one embedded DNA sequence, it tells you so and then quits 
+When gmNano-DQ outputs to the terminal it creates four columns: base#, base, Phred quality ASCII code, numerical Phred quality score
+When gmNano-DQ outputs to a tab deliminated TXT file it creates two columns: base#, numerical Phred quality score
+additional options output headers that can be used when directly importing the output file into GraphPad Prism for visualisation.
 
 # suggested command line usage:
 # python gmNano-DQ.py -h                                    <<<< provides brief help on the arguments gmNano-DQ expects
