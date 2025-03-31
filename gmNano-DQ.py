@@ -11,7 +11,11 @@
 # suggested command line usage:
 # python gmNano-DQ.py -h                                    <<<< provides brief help on the arguments gmNano-DQ expects
 # python gmNano-DQ.py -i filename.fastq                     <<<< outputs base#, base, Phred quality score to the terminal window
-# python gmNano-DQ.py -i filename.fastq -o filename.txt     <<<< outputs base#, base, Phred quality score to filename.txt 
+# python gmNano-DQ.py -i filename.fastq -o filename.txt     <<<< outputs base#, base, Phred quality score to filename.txt
+# python gmNano-DQ.py -i filename.fastq -o filename.txt -op <<<< outputs base#, base, Phred quality score to filename.txt, includes a GraphPad Prism Project Information header 
+
+# example
+# python gmNano-DQ.py -i 613162701_1346-3_barcode31.final.fastq -o myPrism.txt -op -v
 
 # useful information on fastq files and Phred quality scores:
 # https://en.wikipedia.org/wiki/FASTQ_format
@@ -27,9 +31,11 @@
 # https://www.drive5.com/usearch/manual/exp_errs.html
 # https://pubmed.ncbi.nlm.nih.gov/26139637/
 
-# ther provided output include a
+# useful information on GraphPad Prism headers
+# https://www.graphpad.com/guides/prism/latest/user-guide/using_paste_special_notes.htm
 
-#needed for math.log10() and math.floor() [equivalent of rounddown() in excel, fwiw math.ceil() is equivalent of roundup()]
+
+# needed for math.log10() and math.floor() [equivalent of rounddown() in excel, fwiw math.ceil() is equivalent of roundup()]
 import math 
 
 # setup parsed commands
@@ -43,7 +49,7 @@ parser.add_argument("-v", "--verbose", help="Provide greater explanation", actio
 args = parser.parse_args()
 
 if args.verbose:
-    print ("Verbose option selected, will provide as much information as possible")
+    print ("Verbose option selected, will provide as much information as possible to the terminal window")
 
 if args.input:
     myInputFileName = args.input
@@ -76,7 +82,7 @@ else:
 # line 1 sequence_ID
 # line 2 DNA sequence
 # line 3 "+" or "+_and_some_arbitrary_information_often_the_sequence_ID_again"
-# line 4 Phred quality score/base
+# line 4 Phred quality score/base string as ASCII char per base '!' = Phred 0
 
 # check its the right length
 myInputFile = open(myInputFileName, "r")
@@ -86,7 +92,7 @@ if myTotalSequencesCount != 1:
     print ("Input file not single DNA sequence fastq format")
     exit (1)    # exit with error
 
-# open the input file at the top
+# open the input file at the top of the file
 myInputFile = open(myInputFileName, "r")
 
 # read line 1 - the sequence_id
@@ -153,7 +159,7 @@ if myOutputPrismProject and (not (myPrintFile)):    # output Prism Project Info
     myOutputFile.write ("<Info>")
     myOutputFile.write("\n")
 
-    myOutputFile.write ("DNA Sequence Length")       # provide average Phred quality score as base -3
+    myOutputFile.write ("DNA Sequence Length")       # provide DNA Sequence length
     myOutputFile.write("\t")
     myOutputFile.write (str(mySequenceLength))
     myOutputFile.write("\n")
@@ -163,7 +169,7 @@ if myOutputPrismProject and (not (myPrintFile)):    # output Prism Project Info
     myOutputFile.write (str("{:.9f}".format(myAveragePhredScore)))
     myOutputFile.write("\n")
 
-    myOutputFile.write ("Expected Number Of Nanopore Sequencing Base Errors")       # provide expected number of base errors as base -2
+    myOutputFile.write ("Expected Number Of Nanopore Sequencing Base Errors")       # provide expected number of base errors 
     myOutputFile.write("\t")
     myOutputFile.write (str("{:.9f}".format(myRunningPhredProbability)))
     myOutputFile.write("\n")
@@ -173,10 +179,10 @@ if myOutputPrismProject and (not (myPrintFile)):    # output Prism Project Info
     myOutputFile.write (str(math.floor(myRunningPhredProbability)))
     myOutputFile.write("\n")
 
-    myOutputFile.write ("</Info>")
+    myOutputFile.write ("</Info>")                              # end of Prism Project Info
     myOutputFile.write("\n")
 
-    myOutputFile.write ("DNA Read Length (bp)")       # provide most probable number of base errors as base -1
+    myOutputFile.write ("DNA Read Length (bp)")                 # provide X and Y column names
     myOutputFile.write("\t")
     myOutputFile.write ("Base Phred Quality Score")
     myOutputFile.write("\n")
